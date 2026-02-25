@@ -3,7 +3,7 @@
 
 J’ai ajouté le code suivant à admin.py :
 
-```
+```python
 admin.site.register(Choice)
 ```
 
@@ -30,7 +30,7 @@ L’interface est bien apparue et j’ai pu enregistrer de nouvelles questions e
         ◦ 299 792 458 m/s
 Les attributs, les filtres et la recherche n’apparaissent pas car l’interface n’a pas été modifiée dans admin.py.
 
-```
+```python
   @admin.register(Question)
 		class QuestionAdmin(Question):
 		    pass
@@ -38,7 +38,7 @@ Les attributs, les filtres et la recherche n’apparaissent pas car l’interfac
 
 Le code complet jusqu’à présent dans admin.py est le suivant :
 
-```
+```python
 from django.contrib import admin
 
 from .models import Question
