@@ -8,26 +8,26 @@ admin.site.register(Choice)
 ```
 
 L’interface est bien apparue et j’ai pu enregistrer de nouvelles questions et réponses :
-    • What is your name ?
-        ◦ Sir Lancelot of Camelot
-        ◦ Sir Robin of Camelot
-        ◦ It is 'Arthur', King of the Britons
-    • What is your quest?
-        ◦ To seek the Holy Grail
-        ◦ I seek the Grail
-        ◦ Eating pizza
-    • What is your favourite colour?
-        ◦ Blue
-        ◦ Blue. No, yel…
-        ◦ Octarine
-    • What is the capital of Assyria?
-        ◦ I don't know that!
-        ◦ Assur
-        ◦ R'Lyeh
-    • What is the air-speed velocity of an unladen swallow? 
-        ◦ What do you mean? An African or European swallow?
-        ◦ Huh? I... I don't know that.
-        ◦ 299 792 458 m/s
+    - What is your name ?
+        - Sir Lancelot of Camelot
+        - Sir Robin of Camelot
+        - It is 'Arthur', King of the Britons
+    - What is your quest?
+        - To seek the Holy Grail
+        - I seek the Grail
+        - Eating pizza
+    - What is your favourite colour?
+        - Blue
+        - Blue. No, yel…
+        - Octarine
+    - What is the capital of Assyria?
+        - I don't know that!
+        - Assur
+        - R'Lyeh
+    - What is the air-speed velocity of an unladen swallow? 
+        - What do you mean? An African or European swallow?
+        - Huh? I... I don't know that.
+        - 299 792 458 m/s
 Les attributs, les filtres et la recherche n’apparaissent pas car l’interface n’a pas été modifiée dans admin.py.
 
 ```python
