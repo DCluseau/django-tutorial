@@ -1,8 +1,9 @@
 from django.db.models import F
 from django.db.models import Count, Sum, Max
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpRequest
+from django.http import HttpResponseRedirect, HttpRequest
 from django.urls import reverse
 from django.views import generic
 
@@ -101,3 +102,23 @@ def statistics(request):
     'question_la_moins_populaire': question_la_moins_populaire,
     'derniere_question': derniere_question,
     })
+
+def add(request):
+    return render(request, 'add.html')
+
+def confirm_add(request):
+    # récupération du libellé de la question,
+    # sans les éventuels espaces avant et après
+    question_text = request.POST['question_text'].strip()
+    if question_text:
+        # ajout de la question si elle n'est pas vide
+        question = Question(question_text=question_text,
+        pub_date=timezone.now())
+        question.save()
+        return render(request, 'confirm_add.html')
+    else:
+        # réaffichage du formulaire de saisie de la question
+        # avec le message d'erreur
+        return render(request, 'add.html', {
+        'error_message': "You didn't enter a question text",
+        })

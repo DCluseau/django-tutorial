@@ -10,4 +10,6 @@ urlpatterns = [
     path("all", views.AllView.as_view(), name="all"),
     path("<int:pk>/frequency/", views.FrequencyView.as_view(), name="frequency"),
     path('statistics', views.statistics, name='statistics'),
+    path('add/', views.add, name='add'),
+    path('confirm_add/', views.confirm_add, name='confirm_add'),
 ]
