@@ -1,4 +1,5 @@
 from django.db.models import F
+from django.db.models.aggregates import Count, Sum
 from django.shortcuts import render, get_object_or_404
 
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpRequest
@@ -7,22 +8,11 @@ from django.views import generic
 
 from .models import Question, Choice
 
-
-# def index(request):
-#     try:
-#         latest_question_list = Question.objects.order_by("-pub_date")[:5]
-#         context = {"latest_question_list": latest_question_list}
-#     except Question.DoesNotExist:
-#         raise Http404("Question does not exist")
-#     return render(request, "index.html", context)
-#
-# def detail(request, question_id):
-#     question = get_object_or_404(Question, pk=question_id)
-#     return render(request, "detail.html", {"question": question})
-#
-# def results(request, question_id):
-#     question = get_object_or_404(Question, pk=question_id)
-#     return render(request, "results.html", {"question": question})
+def nb(list_questions):
+    nb_choices = 0
+    for question in list_questions:
+        nb_choices += question.aggregate(Count('choices'))
+    return nb_choices
 
 class IndexView(generic.ListView):
     template_name = "index.html"
@@ -47,6 +37,20 @@ class DetailView(generic.DetailView):
 class FrequencyView(generic.DetailView):
     model = Question
     template_name = "frequency.html"
+
+class StatisticsView(generic.ListView):
+    template_name = "statistics.html"
+    context_object_name = "question_list"
+
+    def get_queryset(self):
+        """Return all published questions."""
+        return Question.objects.order_by("question_text")
+
+    @staticmethod
+    def get_total_nb_of_choices():
+        model = Question
+        count = 0
+        return count
 
 class ResultsView(generic.DetailView):
     model = Question

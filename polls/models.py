@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.db.models import Sum
+from django.db.models.aggregates import Avg
 from django.utils import timezone
 
 MAX_LENGTH = 20
@@ -32,7 +33,16 @@ class Question(models.Model):
         max_choice = max(choices, key=lambda c: c.votes / total)
         return max_choice.choice_text, max_choice.votes / total
 
+    def get_stats(self):
+        total_of_choices = self.choice_set.aggregate(total=Sum('votes'))['total']
+        avg_votes = self.choice_set.aggregate(Avg('votes', default=0))['votes__avg']
+        return [total_of_choices, avg_votes]
 
+    def get_total_votes(self):
+        return self.choice_set.aggregate(total=Sum('votes'))['total']
+
+    def get_avg_votes(self):
+        return self.choice_set.aggregate(Avg('votes', default=0))
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
