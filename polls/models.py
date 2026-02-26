@@ -23,7 +23,7 @@ class Question(models.Model):
     def get_choices(self):
         resultat = self.choice_set.aggregate(total=Sum('votes'))
         total = resultat['total']
-        return [(c.choice_text, c.votes, (0 if total == 0 else c.votes / total)) for c in self.choice_set.all()]
+        return [(c.choice_text, c.votes, (0 if total == 0 else c.votes / total * 100)) for c in self.choice_set.all()]
 
     def get_max_choice(self):
         choices = self.choice_set.all()
@@ -32,14 +32,15 @@ class Question(models.Model):
         max_choice = max(choices, key=lambda c: c.votes / total)
         return max_choice.choice_text, max_choice.votes / total
 
-    def get_percentage(self):
-        percent = self.get_choices()[0][2]
-        return percent * 100
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+
+    def get_percentage(self, total):
+        return self.votes / total * 100
 
     def __str__(self):
         return text_excerpt(self.choice_text, MAX_LENGTH)
