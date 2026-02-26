@@ -9,14 +9,15 @@
  {% if question_list %}
     <ul>
         <li>Total number of questions : {{ question_list|length }}</li>
-        <li>Total number of choices : {{ nb }}</li>
-        <li>Total number and average of votes per questions :
+<!--        <li>Total number of choices : {{ nb }}</li>-->
+        <li>Total number of choices, votes and average of votes per questions :
             {% for question in question_list%}
             <ul>
                 <li>{{ question.question_text }}
                     <ul>
-                        <li>Total number of votes : {{ question.get_total_votes }}</li>
+                        <li>Total number of votes : {{ question.get_stats.0 }}</li>
                         <li>Average number of votes : {{ question.get_stats.1 }}</li>
+                        <li>Total number of choices : {{ question.get_stats.2 }}</li>
                     </ul>
                 </li>
             </ul>
