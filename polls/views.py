@@ -11,11 +11,7 @@ from .utils import minimax
 
 from .models import Question, Choice
 
-def nb(list_questions):
-    nb_choices = 0
-    for question in list_questions:
-        nb_choices += question.aggregate(Count('choices'))
-    return nb_choices
+NB_MAX_CHOIX = 5
 
 class IndexView(generic.ListView):
     template_name = "index.html"
@@ -104,7 +100,9 @@ def statistics(request):
     })
 
 def add(request):
-    return render(request, 'add.html')
+    return render(request, 'add.html', {
+    'liste_no_choix': range(NB_MAX_CHOIX)
+    })
 
 def confirm_add(request):
     # récupération du libellé de la question,
@@ -115,6 +113,17 @@ def confirm_add(request):
         question = Question(question_text=question_text,
         pub_date=timezone.now())
         question.save()
+    # on traite à présent les champs de choix remplis
+    # (on s'arrête au premier vide)
+        for no_choix in range(NB_MAX_CHOIX):
+            nom_champ = 'choix_{}'.format(no_choix)
+            choice_text = request.POST[nom_champ].strip()
+            if choice_text:
+                choice = Choice(question=question,
+                choice_text=choice_text)
+                choice.save()
+            else:
+                break
         return render(request, 'confirm_add.html')
     else:
         # réaffichage du formulaire de saisie de la question
