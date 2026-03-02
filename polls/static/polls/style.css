@@ -4,3 +4,6 @@ body {
 li a {
     color: green;
 }
+form ul {
+list-style-type: none;
+}

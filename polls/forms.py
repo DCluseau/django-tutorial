@@ -1,10 +1,17 @@
 from django import forms
 
-class NameForm(forms.Form):
-    your_name = forms.CharField(label="Your name", max_length=100)
+class QuestionAddForm(forms.Form):
+    question_text = forms.CharField(label='Question text')
+    choice_0 = forms.CharField(label='choice #1')
+    choice_1 = forms.CharField(label='choice #2', required=False)
+    choice_2 = forms.CharField(label='choice #3', required=False)
+    choice_3 = forms.CharField(label='choice #4', required=False)
+    choice_4 = forms.CharField(label='choice #5', required=False)
 
-class ContactForm(forms.Form):
-    subject = forms.CharField(max_length=100)
-    message = forms.CharField(widget=forms.Textarea)
-    sender = forms.EmailField()
-    cc_myself = forms.BooleanField(required=False)
+class VoteForm(forms.Form):
+    def __init__(self, question_text, choices, *args, **kwargs):
+        super(VoteForm, self).__init__(*args, **kwargs)
+        self.fields['choice'] = \
+        forms.ChoiceField(label=question_text,
+        widget=forms.RadioSelect,
+        choices=choices)

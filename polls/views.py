@@ -6,8 +6,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from .utils import minimax
-from .forms import NameForm
-from django.core.mail import send_mail
+
+from .forms import VoteForm, QuestionAddForm
 
 from .models import Question, Choice
 
@@ -58,27 +58,23 @@ class ResultsView(generic.DetailView):
 
 ############## Methods ##############
 
+# fusion et modification de la classe DetailView et # de la méthode vote en la seule méthode vote
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST["choice"])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(
-            request,
-            "detail.html",
-            {
-                "question": question,
-                "error_message": "You didn't select a choice.",
-            },
-        )
+    choices_form = [(choice.id, choice.choice_text) for choice in question.choice_set.all()]
+    if request.method == 'POST':
+        form = VoteForm(question.question_text,
+        choices_form, request.POST)
+        if form.is_valid():
+            selected_choice = \
+            question.choice_set.get(pk=form.cleaned_data['choice'])
+            selected_choice.votes += 1
+            selected_choice.save()
+            return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
     else:
-        selected_choice.votes = F("votes") + 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+        form = VoteForm(question.question_text, choices_form)
+    return render(request, 'polls/detail.html',
+        {'form': form, 'question': question})
 
 def statistics(request):
     nbr_sondages = Question.objects.count()
@@ -102,60 +98,27 @@ def statistics(request):
     'derniere_question': derniere_question,
     })
 
+# fusion et modification des méthodes add et confirm_add # en la seule méthode add
 def add(request):
-    return render(request, 'add.html', {
-    'liste_no_choix': range(NB_MAX_CHOIX)
-    })
-
-def confirm_add(request):
-    # récupération du libellé de la question,
-    # sans les éventuels espaces avant et après
-    question_text = request.POST['question_text'].strip()
-    if question_text:
-        # ajout de la question si elle n'est pas vide
-        question = Question(question_text=question_text,
-        pub_date=timezone.now())
-        question.save()
-    # on traite à présent les champs de choix remplis
-    # (on s'arrête au premier vide)
-        for no_choix in range(NB_MAX_CHOIX):
-            nom_champ = 'choix_{}'.format(no_choix)
-            choice_text = request.POST[nom_champ].strip()
-            if choice_text:
-                choice = Choice(question=question,
-                choice_text=choice_text)
-                choice.save()
-            else:
-                break
-        return render(request, 'confirm_add.html')
-    else:
-        # réaffichage du formulaire de saisie de la question
-        # avec le message d'erreur
-        return render(request, 'add.html', {
-        'error_message': "You didn't enter a question text",
-        })
-
-def get_name(request):
-    # if this is a POST request we need to process the form data
-    if request.method == "POST":
-        # create a form instance and populate it with data from the request:
-        form = NameForm(request.POST)
-        # check whether it's valid:
+    if request.method == 'POST':
+        form = QuestionAddForm(request.POST)
         if form.is_valid():
-            subject = form.cleaned_data["subject"]
-            message = form.cleaned_data["message"]
-            sender = form.cleaned_data["sender"]
-            cc_myself = form.cleaned_data["cc_myself"]
-
-            recipients = ["info@example.com"]
-            if cc_myself:
-                recipients.append(sender)
-
-            send_mail(subject, message, sender, recipients)
-            return HttpResponseRedirect("/thanks/")
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = NameForm()
-
-    return render(request, "name.html", {"form": form})
+            question = \
+            Question(question_text=\
+            form.cleaned_data['question_text'],
+            pub_date=timezone.now())
+            question.save()
+        # on traite à présent les champs de choix remplis
+        # (on s'arrête au premier vide)
+            for no_choix in range(NB_MAX_CHOIX):
+                nom_champ = 'choice_{}'.format(no_choix)
+                choice_text = form.cleaned_data[nom_champ].strip()
+                if choice_text:
+                    choice = Choice(question=question, choice_text=choice_text)
+                    choice.save()
+                else:
+                    break
+            return render(request, 'polls/confirm_add.html')
+        else:
+            form = QuestionAddForm()
+    return render(request, 'polls/add.html', {'form': form})
