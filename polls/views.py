@@ -1,11 +1,12 @@
 from django.db.models import F
-from django.db.models import Count, Sum, Max
+from django.db.models import Sum, Max
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
-from django.http import HttpResponseRedirect, HttpRequest
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from .utils import minimax
+from .forms import NameForm
 
 from .models import Question, Choice
 
@@ -51,6 +52,8 @@ class FrequencyView(generic.DetailView):
 class ResultsView(generic.DetailView):
     model = Question
     template_name = "results.html"
+
+
 
 ############## Methods ##############
 
@@ -130,3 +133,21 @@ def confirm_add(request):
         return render(request, 'add.html', {
         'error_message': "You didn't enter a question text",
         })
+
+def get_name(request):
+    # if this is a POST request we need to process the form data
+    if request.method == "POST":
+        # create a form instance and populate it with data from the request:
+        form = NameForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect("/thanks/")
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = NameForm()
+
+    return render(request, "name.html", {"form": form})
