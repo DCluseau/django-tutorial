@@ -12,4 +12,5 @@ urlpatterns = [
     path('statistics', views.statistics, name='statistics'),
     path('add/', views.add, name='add'),
     path('confirm_add/', views.confirm_add, name='confirm_add'),
+    path('form/', views.get_name, name='get_name'),
 ]

@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views import generic
 from .utils import minimax
 from .forms import NameForm
+from django.core.mail import send_mail
 
 from .models import Question, Choice
 
@@ -141,9 +142,16 @@ def get_name(request):
         form = NameForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
+            subject = form.cleaned_data["subject"]
+            message = form.cleaned_data["message"]
+            sender = form.cleaned_data["sender"]
+            cc_myself = form.cleaned_data["cc_myself"]
+
+            recipients = ["info@example.com"]
+            if cc_myself:
+                recipients.append(sender)
+
+            send_mail(subject, message, sender, recipients)
             return HttpResponseRedirect("/thanks/")
 
     # if a GET (or any other method) we'll create a blank form
