@@ -73,7 +73,7 @@ def vote(request, question_id):
             return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
     else:
         form = VoteForm(question.question_text, choices_form)
-    return render(request, 'polls/detail.html',
+    return render(request, 'detail.html',
         {'form': form, 'question': question})
 
 def statistics(request):
@@ -119,6 +119,6 @@ def add(request):
                 else:
                     break
             return render(request, 'polls/confirm_add.html')
-        else:
-            form = QuestionAddForm()
+    else:
+        form = QuestionAddForm()
     return render(request, 'polls/add.html', {'form': form})
