@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ajouter</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block logo %}
+    <img src="/static/polls/images/logo-vectoriel-quiz-isoler-icone-questionnaire-blanc-signe-sondage-concept-symboles-discours-bulle-plate_101884-1719.jpg" />
+{% endblock %}
 <h1>Add a question</h1>
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>
@@ -14,5 +11,3 @@
     {{ form.as_p }}
     <input type="submit" value="Add">
 </form>
-</body>
-</html>

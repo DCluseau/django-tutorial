@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Statistics</title>
-</head>
-<body>
+{% extends "base.html" %}
  <h1>Statistics</h1>
     <ul>
         <li>Total number of questions : {{ question_list|length }}</li>
@@ -15,5 +9,3 @@
         <li>Least popular question : {{question_la_moins_populaire}}</li>
         <li>Latest added question : {{ derniere_question }}</li>
     </ul>
-</body>
-</html>

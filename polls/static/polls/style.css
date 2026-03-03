@@ -1,9 +1,16 @@
 body {
     background: white url("images/background.png") no-repeat;
 }
+
+#sidebar img {
+    float: left;
+}
 li a {
     color: green;
 }
-form ul {
-list-style-type: none;
+ul {
+    list-style-type: none;
+}
+#sidebar li {
+    display: inline-block;
 }

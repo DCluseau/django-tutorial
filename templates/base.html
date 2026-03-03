@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/polls/style.css">
+    <title>{% block title %}Polls{% endblock %}</title>
+</head>
+<body>
+    <main>
+        <div id="sidebar">
+
+        {% block sidebar %}
+            {% block logo %}
+                <img src="/static/polls/images/DTC-logo-chat-nime-2024.gif" />
+            {% endblock %}
+            <ul>
+                <li><a href="/polls">Home</a></li>
+                <li><a href="/polls/add">Add</a></li>
+                <li><a href="/polls/all">All</a></li>
+                <li><a href="/polls/statistics">Statistics</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+        {% endblock %}
+    </div>
+        <main>
+            {% block content %}
+                <h1>Title</h1>
+            {% endblock %}
+        </main>
+
+    </main>
+</body>
+</html>
